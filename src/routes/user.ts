@@ -9,10 +9,14 @@ const router = express.Router();
 
 router.post('/register', async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, name, username, repeatPassword } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required' });
+        if (password !== repeatPassword) {
+            return res.status(400).json({ message: 'Password should match repeatPassword' });
+        }
+
+        if (!email || !password || !name || !username || !repeatPassword) {
+            return res.status(400).json({ message: 'All fields are required' });
         }
 
         const user = await User.findOne({ email });
@@ -26,6 +30,8 @@ router.post('/register', async (req, res, next) => {
         const newUser = await User.create({
             email,
             password: hash,
+            name,
+            username
         });
 
         const token = jwt.sign({ sub: newUser.id }, JWT_SECRET, {

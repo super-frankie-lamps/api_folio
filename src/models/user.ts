@@ -15,7 +15,7 @@ const userSchema = new Schema({
     googleId: String,
     name: String,
     phone: String,
-    login: String
+    username: String
 });
 
 export default model<IUser>('User', userSchema);
