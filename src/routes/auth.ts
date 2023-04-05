@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/types';
@@ -13,7 +13,7 @@ router.get(
 router.get(
     '/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
+    (req: Request, res: Response) => {
         const token = jwt.sign({ sub: req.user!.id }, JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN,
         });

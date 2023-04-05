@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
@@ -7,7 +7,7 @@ import { JWT_SECRET } from '../config/types';
 
 const router = express.Router();
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body;
 
@@ -28,7 +28,7 @@ router.post('/register', async (req, res, next) => {
             password: hash
         });
 
-        const token = jwt.sign({ sub: newUser.id }, JWT_SECRET, {
+        const token = jwt.sign({ sub: newUser.id, email: newUser.email }, JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN,
         });
 
@@ -92,7 +92,7 @@ router.post('/register', async (req, res, next) => {
  *           type: object
  *           $ref: '#/definitions/Login'
  */
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body;
 
@@ -125,7 +125,7 @@ router.post('/login', async (req, res, next) => {
 router.get(
     '/me',
     passport.authenticate('jwt', { session: false }),
-    (req, res) => {
+    (req: Request, res: Response) => {
         // TODO: find how and add type declaration for "req" parameter to avoid using @ts-ignore
         // @ts-ignore
         res.json({ email: req.user!.email });

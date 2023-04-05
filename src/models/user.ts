@@ -1,21 +1,18 @@
-import {Schema, model} from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { IPortfolio, portfolioSchema } from './portfolio';
 
 interface IUser extends Document {
-    name: string;
     email: string;
     googleId: string;
     password: string;
-    phone: string;
-    login: string;
+    portfolios: IPortfolio[]
 }
 
 const userSchema = new Schema({
     email: String,
     password: String,
     googleId: String,
-    name: String,
-    phone: String,
-    username: String
+    portfolios: [portfolioSchema]
 });
 
 export default model<IUser>('User', userSchema);
