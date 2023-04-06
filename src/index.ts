@@ -2,20 +2,19 @@
  * Required External Modules
  */
 
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 dotenv.config();
-import express, { Express } from "express";
-import session from "express-session";
-import cors from "cors";
-import helmet from "helmet";
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
+import express, { Express } from 'express';
+import session from 'express-session';
+import cors from 'cors';
+import helmet from 'helmet';
 import db from './config/database';
 import passport from './config/passport';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import portfolioRoutes from './routes/portfolio';
 import verifyToken from './routes/verify-token';
+import setupSwagger from './swaggerOptions';
 
 /**
  * App Variables
@@ -26,19 +25,6 @@ if (!process.env.PORT) {
 }
 
 const app: Express = express();
-
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'My API',
-            version: '1.0.0',
-        },
-    },
-    apis: ['./routes/*.js'],
-};
-
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 /**
  *  App Configuration
@@ -55,11 +41,12 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/portfolios', verifyToken,  portfolioRoutes);
+
+setupSwagger(app);
 
 /**
  * Server Activation

@@ -1,0 +1,9 @@
+{
+  "info": {
+    "title": "Folio API",
+    "version": "1.0.0",
+    "description": "API documentation for Folio API"
+  },
+  "paths": {},
+  "swagger": "2.0"
+}
